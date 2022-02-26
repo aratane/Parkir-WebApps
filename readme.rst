@@ -1,0 +1,1 @@
+Ini adalah website apps buatan saya sendiri, Apps sedang di kembangkan, belum semuanya bisa di akses, bila ingin berkontribusi, silahkan pull request dan fork repo github ini, terima kasih, salam hangat @sanji
