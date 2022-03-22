@@ -88,9 +88,10 @@ class Auth extends CI_Controller
             $this->load->view('auth/register');
             $this->load->view('templates/auth_footer');
         } else {
+            $email = $this->input->post('email', true);
             $data = [
                 'name' => htmlspecialchars($this->input->post('name', true)),
-                'email' => htmlspecialchars($this->input->post('email', true)),
+                'email' => htmlspecialchars($email),
                 'image' => 'default.jpg',
                 'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
                 'role_id' => 2,
@@ -98,9 +99,41 @@ class Auth extends CI_Controller
                 'date_created' => time()
             ];
 
-            $this->db->insert('user', $data);
+            //$this->db->insert('user', $data);
+
+            $this->_sendEmail();
+
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Selamat akun kamu sudah berhasil dibuat, tolong login</div>');
             redirect('auth');
+        }
+    }
+
+    private function _sendEmail()
+    {
+        $config = [
+            'protocol'  => 'smtp',
+            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_user' => 'staf.parkirapps@gmail.com',
+            'smtp_pass' => '#admin123',
+            'smtp_port' =>  465,
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+            'newline'   => "\r\n"
+        ];
+
+        $this->load->library('email', $config);
+
+        $this->email->from('staf.parkirapps@gmail.com', 'Admin Parkir Apps');
+        $this->email->to('akunbotak503@gmail.com');
+
+        $this->email->subject('Testing');
+        $this->email->message('Hallo Dunia');
+
+        if ($this->email->send()) {
+            return true;
+        } else {
+            echo $this->email->print_debugger();
+            die;
         }
     }
 
